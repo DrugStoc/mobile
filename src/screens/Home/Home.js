@@ -1,39 +1,34 @@
 //import liraries
-import axios from 'axios';
-import React, {Component, PureComponent, useEffect, useRef} from 'react';
+import {useScrollToTop} from '@react-navigation/native';
+import React, {useEffect, useRef} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-  StatusBar,
-  TextInput,
   Dimensions,
   FlatList,
-  Platform,
-  Animated,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  View,
 } from 'react-native';
+import BottomSheet from 'react-native-bottomsheet-reanimated';
+import FastImage from 'react-native-fast-image';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {
-  Appbar,
-  Avatar,
   Badge,
   Button,
   Caption,
-  Card,
+  Chip,
   Colors,
-  FAB,
+  Divider,
   IconButton,
+  List,
   Paragraph,
   Searchbar,
   Surface,
   Title,
-  Chip,
-  List,
-  Divider,
 } from 'react-native-paper';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
+import {SharedElement} from 'react-navigation-shared-element';
 import {connect} from 'react-redux';
 import Logo from '../../assets/imgs/Logo.png';
 import {
@@ -43,16 +38,6 @@ import {
   get_recommended_products,
   get_user_cart_item,
 } from '../../services/products';
-import {company} from '../../utils/data';
-import FastImage from 'react-native-fast-image';
-import {
-  ImageHeaderScrollView,
-  TriggeringView,
-} from 'react-native-image-header-scroll-view';
-import {SharedElement} from 'react-navigation-shared-element';
-import BottomSheet from 'react-native-bottomsheet-reanimated';
-import {useScrollToTop} from '@react-navigation/native';
-import * as Animatable from 'react-native-animatable';
 
 const height = Dimensions.get('screen').height;
 
@@ -334,7 +319,7 @@ const Home = ({
             <TouchableOpacity
               style={{marginTop: 3}}
               onPress={() =>
-                navigation.navigate('search', {
+                navigation.navigate('products', {
                   name: 'recommended',
                   data: products,
                 })
@@ -532,28 +517,25 @@ const Home = ({
   );
 };
 
-
-
-
 const MapStateToProps = (state) => {
-	return {
-	  user: state.user.user,
-	  category: state.categories,
-	  products: state.products,
-	  brand: state.brand,
-	  cart: state.cart.data,
-	};
+  return {
+    user: state.user.user,
+    category: state.categories,
+    products: state.products,
+    brand: state.brand,
+    cart: state.cart.data,
   };
-  
-  const MapDispatachToProps = (dispatch) => {
-	return {
-	  categories: () => dispatch(get_products_categories()),
-	  recommended: () => dispatch(get_recommended_products()),
-	  manufacturer: () => dispatch(get_manufacturer()),
-	  cart_data: () => dispatch(get_user_cart_item()),
-	  load_more: (url) => dispatch(get_more_products(url)),
-	};
+};
+
+const MapDispatachToProps = (dispatch) => {
+  return {
+    categories: () => dispatch(get_products_categories()),
+    recommended: () => dispatch(get_recommended_products()),
+    manufacturer: () => dispatch(get_manufacturer()),
+    cart_data: () => dispatch(get_user_cart_item()),
+    load_more: (url) => dispatch(get_more_products(url)),
   };
+};
 
 //make this component available to the app
 export default connect(MapStateToProps, MapDispatachToProps)(Home);

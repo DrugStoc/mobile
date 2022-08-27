@@ -1,43 +1,31 @@
 //import liraries
-import React, {Component, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
+import {Linking, StyleSheet, Text, View} from 'react-native';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ImageEditorStatic,
-  Linking,
-  ScrollView,
-  Image,
-} from 'react-native';
-import {
-  Appbar,
-  Colors,
-  IconButton,
-  List,
-  Searchbar,
-  Surface,
-  Divider,
-  Paragraph,
   Button,
-  Caption,
+  Colors,
+  Divider,
+  List,
+  Paragraph,
+  Surface,
   TextInput,
 } from 'react-native-paper';
 
 import BottomSheet from 'react-native-bottomsheet-reanimated';
 
-import Logo1 from '../../assets/imgs/gig.png';
-import Logo2 from '../../assets/imgs/fedex.png';
-import Logo3 from '../../assets/imgs/dhl.png';
 import {Paystack, paystackProps} from 'react-native-paystack-webview';
 import {connect} from 'react-redux';
 import {create_order} from '../../services/products';
 
 // create a component
 const ChechOut = ({navigation, user, createOrder, items, loading}) => {
+  console.log(createOrder);
   const sheetRef = useRef(null);
   const payRef = useRef(null);
   const pay2Ref = useRef(null);
   const [ussd, setUssd] = useState(false);
+  const [drugstocPayLoading, setDrugstocPayLoading] = useState(false);
+  const [payNowLoading, setPayNowLoading] = useState(false);
   const [accountName, setAccountName] = useState('');
   const [bankName, setbankNAme] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
@@ -56,9 +44,10 @@ const ChechOut = ({navigation, user, createOrder, items, loading}) => {
     return resp;
   };
 
-  const create = () => {
+  const create = (callback) => {
     createOrder(getItems()).then(() => {
       navigation.navigate('success');
+      callback();
     });
   };
 
@@ -303,49 +292,51 @@ Bank Name: Access Bank`}</Text>
           <Divider />
         </View>
 
-        {/* <List.Item title="Delivery Options" />
-			<View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 30 }}>
-				<View
-					style={{
-						borderWidth: 1,
-						borderColor: Colors.grey400,
-						borderRadius: 7,
-						width: 90,
-						height: 90,
-						alignItems: 'center'
-					}}
-				>
-					<Image source={Logo1} style={{ width: '35%', height: 50, resizeMode: 'contain' }} />
-					<Caption>3-5days</Caption>
-				</View>
-				<View
-					style={{
-						borderWidth: 1,
-						borderColor: Colors.grey400,
-						borderRadius: 7,
-						width: 90,
-						height: 90,
-						alignItems: 'center'
-					}}
-				>
-					<Image source={Logo2} style={{ width: '35%', height: 50, resizeMode: 'contain' }} />
-					<Caption>3-5days</Caption>
-				</View>
-				<View
-					style={{
-						borderWidth: 1,
-						borderColor: Colors.grey400,
-						borderRadius: 7,
-						width: 90,
-						height: 90,
-						alignItems: 'center'
-					}}
-				>
-					<Image source={Logo3} style={{ width: '35%', height: 50, resizeMode: 'contain' }} />
-					<Caption>3-5days</Caption>
-				</View>
-			</View>
-			<Divider /> */}
+        {/* 
+          <List.Item title="Delivery Options" />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 30 }}>
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: Colors.grey400,
+                  borderRadius: 7,
+                  width: 90,
+                  height: 90,
+                  alignItems: 'center'
+                }}
+              >
+                <Image source={Logo1} style={{ width: '35%', height: 50, resizeMode: 'contain' }} />
+                <Caption>3-5days</Caption>
+              </View>
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: Colors.grey400,
+                  borderRadius: 7,
+                  width: 90,
+                  height: 90,
+                  alignItems: 'center'
+                }}
+              >
+                <Image source={Logo2} style={{ width: '35%', height: 50, resizeMode: 'contain' }} />
+                <Caption>3-5days</Caption>
+              </View>
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: Colors.grey400,
+                  borderRadius: 7,
+                  width: 90,
+                  height: 90,
+                  alignItems: 'center'
+                }}
+              >
+                <Image source={Logo3} style={{ width: '35%', height: 50, resizeMode: 'contain' }} />
+                <Caption>3-5days</Caption>
+              </View>
+            </View>
+          <Divider /> 
+        */}
         <View
           style={{
             padding: 16,
@@ -421,26 +412,41 @@ Bank Name: Access Bank`}</Text>
 							Pay With DrugStocPay
 						</Button> */}
               <Button
-                loading={loading}
-                disabled={loading}
+                loading={drugstocPayLoading}
+                disabled={drugstocPayLoading}
                 mode="outlined"
                 uppercase={false}
                 style={{borderRadius: 50, marginTop: 15}}
                 // onPress={() => navigation.navigate('pinPay')}
-                onPress={create}>
+                onPress={() => {
+                  setDrugstocPayLoading(true);
+                  create(() => {
+                    setDrugstocPayLoading(false);
+                  });
+                }}>
                 Pay With DrugStocPay
               </Button>
             </View>
           )}
 
-          <Button
-            loading={loading}
-            disabled={loading}
-            mode="contained"
-            style={{borderRadius: 50, marginTop: 15}}
-            onPress={() => payRef.current.snapTo(1)}>
-            Pay Now
-          </Button>
+          <View>
+            <Button
+              loading={loading}
+              disabled={loading}
+              // mode="contained"
+              labelStyle={{color: '#FFF'}}
+              color={'#ff0000'}
+              style={{
+                borderRadius: 50,
+                marginTop: 15,
+                backgroundColor: '#2C4DA7',
+              }}
+              onPress={() => {
+                payRef.current.snapTo(1);
+              }}>
+              Pay Now
+            </Button>
+          </View>
         </View>
       </View>
       <BottomSheet
