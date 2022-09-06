@@ -6,13 +6,14 @@ import {
   FlatList,
   Image,
   SafeAreaView,
+  ScrollView,
   StatusBar,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import BottomSheet from 'react-native-bottomsheet-reanimated';
 import FastImage from 'react-native-fast-image';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {
   Badge,
   Button,
@@ -316,7 +317,7 @@ const Home = ({
               </Paragraph>
               <Caption>Scroll down to discover all available products</Caption>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{marginTop: 3}}
               onPress={() =>
                 navigation.navigate('products', {
@@ -327,7 +328,7 @@ const Home = ({
               <Caption style={{color: '#2C4DA7', fontSize: 14}}>
                 See All
               </Caption>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>
@@ -352,11 +353,18 @@ const Home = ({
 				</View> */}
         <View style={{paddingHorizontal: 20}}>
           <View style={{marginBottom: 20}}>
+            {/* <TouchableOpacity
+              onPress={() => {
+                console.log('clicked');
+              }}>
+              <Text>Here</Text>
+            </TouchableOpacity> */}
             <View
               style={{
                 flexDirection: 'row',
                 marginVertical: 10,
                 justifyContent: 'space-between',
+
                 // opacity: opacity,
                 // height: headerdisplay
               }}>

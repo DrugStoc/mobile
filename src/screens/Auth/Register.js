@@ -79,7 +79,7 @@ const Register = ({navigation, register, loading}) => {
                     data={category}
                     labelField="label"
                     valueField="value"
-                    placeholder={!isFocus ? 'What best describe you?' : '...'}
+                    placeholder={!isFocus ? "What best describe's you?" : '...'}
                     value={value}
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => {

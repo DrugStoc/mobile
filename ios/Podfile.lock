@@ -295,6 +295,8 @@ PODS:
     - React
   - react-native-safe-area-context (3.4.1):
     - React-Core
+  - react-native-version-check (3.4.3):
+    - React
   - react-native-webview (11.23.0):
     - React-Core
   - React-RCTActionSheet (0.63.4):
@@ -466,6 +468,7 @@ DEPENDENCIES:
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-paystack-webview (from `../node_modules/react-native-paystack-webview`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-version-check (from `../node_modules/react-native-version-check`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -563,6 +566,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-paystack-webview"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-version-check:
+    :path: "../node_modules/react-native-version-check"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -655,6 +660,7 @@ SPEC CHECKSUMS:
   react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
   react-native-paystack-webview: d8ed4a0300c7872673e186294cb6176cca46c696
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
+  react-native-version-check: e85c2e21d0955b7cdfd91c0ddacc3edf14b7abd7
   react-native-webview: e771bc375f789ebfa02a26939a57dbc6fa897336
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b

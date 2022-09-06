@@ -10,7 +10,8 @@ import {
   View,
 } from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 // import ImagePicker from 'react-native-image-picker';
 // import ImageResizer from 'react-native-image-resizer';
 import {Button, Caption, Card, Surface, Title} from 'react-native-paper';
@@ -20,18 +21,18 @@ import {
   upload_user_licences,
 } from '../../services/authentication';
 import {skip_update_document_for_now} from '../../services/onboarding';
-import {advert, location} from '../../utils/data';
+import {advert, location as locations} from '../../utils/data';
 
 // create a component
-const UpdateData = ({navigation, skip, upload, user, loading}) => {
+const UpdateData = ({navigation, skip, upload, user, loading, user_data}) => {
   const [showDropDown1, setShowDropDown1] = useState(false);
   const [showDropDown2, setShowDropDown2] = useState(false);
   const [premisePreview, setPremise] = useState(null);
   const [lisencePreview, setLicence] = useState(null);
   const [premiseData, setPremiseData] = useState(null);
   const [lisenceData, setLicenceDate] = useState(null);
-  const [locations, setLocation] = useState(null);
-  const [discover, setDiscover] = useState(null);
+  const [location, setLocation] = useState(user_data.location);
+  const [discover, setDiscover] = useState(user_data.discover);
   const {control, handleSubmit, errors} = useForm();
 
   const [locationValue, setLocationValue] = useState(null);
@@ -49,6 +50,7 @@ const UpdateData = ({navigation, skip, upload, user, loading}) => {
   const formdata = new FormData();
 
   useEffect(() => {
+    console.log('called!');
     user();
   }, []);
 
@@ -66,22 +68,46 @@ const UpdateData = ({navigation, skip, upload, user, loading}) => {
           text: 'Choose from Library...',
           onPress: async () => {
             await launchImageLibrary({}, (res) => {
-              setLicenceDate(res);
-              setLicence(res.assets[0].uri);
-              console.log(res);
+              ImageResizer.createResizedImage(
+                res.assets[0].uri,
+                600,
+                600,
+                'JPEG',
+                40,
+              )
+                .then((res) => {
+                  setLicenceDate(res);
+                  setLicence(res.uri);
+                  console.log(res);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             });
           },
         },
-        {
-          text: 'Take Photo...',
-          onPress: async () => {
-            await launchCamera({}, (res) => {
-              setLicenceDate(res);
-              setLicence(res.assets[0].uri);
-              console.log(res);
-            });
-          },
-        },
+        // {
+        //   text: 'Take Photo...',
+        //   onPress: async () => {
+        //     await launchCamera({}, (res) => {
+        //       ImageResizer.createResizedImage(
+        //         res.assets[0].uri,
+        //         600,
+        //         600,
+        //         'JPEG',
+        //         40,
+        //       )
+        //         .then((res) => {
+        //           setLicenceDate(res);
+        //           setLicence(res.uri);
+        //           console.log(res);
+        //         })
+        //         .catch((err) => {
+        //           console.log(err);
+        //         });
+        //     });
+        //   },
+        // },
       ],
       {cancelable: true},
     );
@@ -101,29 +127,53 @@ const UpdateData = ({navigation, skip, upload, user, loading}) => {
           text: 'Choose from Library...',
           onPress: async () => {
             await launchImageLibrary({}, (res) => {
-              setPremiseData(res);
-              setPremise(res.assets[0].uri);
-              console.log(res);
+              ImageResizer.createResizedImage(
+                res.assets[0].uri,
+                600,
+                600,
+                'JPEG',
+                40,
+              )
+                .then((res) => {
+                  setPremiseData(res);
+                  setPremise(res.uri);
+                  console.log(res);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             });
           },
         },
-        {
-          text: 'Take Photo...',
-          onPress: async () => {
-            await launchCamera({}, (res) => {
-              setPremiseData(res);
-              setPremise(res.assets[0].uri);
-              console.log(res);
-            });
-          },
-        },
+        // {
+        //   text: 'Take Photo...',
+        //   onPress: async () => {
+        //     await launchCamera({}, (res) => {
+        //       ImageResizer.createResizedImage(
+        //         res.assets[0].uri,
+        //         600,
+        //         600,
+        //         'JPEG',
+        //         40,
+        //       )
+        //         .then((res) => {
+        //           setPremiseData(res);
+        //           setPremise(res.uri);
+        //           console.log(res);
+        //         })
+        //         .catch((err) => {
+        //           console.log(err);
+        //         });
+        //     });
+        //   },
+        // },
       ],
       {cancelable: true},
     );
   };
 
   const onSubmit = () => {
-    formdata.append('location', locations);
+    formdata.append('location', location);
     formdata.append('discover', discover);
     formdata.append('practice_license', {
       name: lisenceData.name,
@@ -184,18 +234,18 @@ const UpdateData = ({navigation, skip, upload, user, loading}) => {
                   selectedTextStyle={styles.selectedTextStyle}
                   inputSearchStyle={styles.inputSearchStyle}
                   iconStyle={styles.iconStyle}
-                  data={location}
+                  data={locations}
                   labelField="label"
                   valueField="value"
                   placeholder={!isLocationFocus ? 'Location' : '...'}
-                  value={value}
+                  value={location}
                   onFocus={() => setIsLocationFocus(true)}
                   onBlur={() => {
                     setIsLocationFocus(false);
                     onBlur();
                   }}
                   onChange={(item) => {
-                    setDiscover(item.value);
+                    setLocation(item.value);
                     onChange(item.value);
                     setIsLocationFocus(false);
                   }}
@@ -231,7 +281,7 @@ const UpdateData = ({navigation, skip, upload, user, loading}) => {
                     placeholder={
                       !isAdvertFocus ? 'How did you hear about us?' : '...'
                     }
-                    value={value}
+                    value={discover}
                     onFocus={() => setIsAdvertFocus(true)}
                     onBlur={() => {
                       setIsAdvertFocus(false);
@@ -378,6 +428,7 @@ const UpdateData = ({navigation, skip, upload, user, loading}) => {
 const mapStateToProps = (state) => {
   return {
     loading: state.loading.uiloading,
+    user_data: state.user.user,
   };
 };
 
